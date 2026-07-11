@@ -1,15 +1,16 @@
 "use client"
 
-import { CalendarDays, Dumbbell, LayoutList, TrendingUp } from "lucide-react"
+import { CalendarDays, Dumbbell, LayoutList, TrendingUp, Settings } from "lucide-react"
 import { cn } from "@/lib/utils"
 
-export type Screen = "log" | "exercises" | "splits" | "progress"
+export type Screen = "log" | "exercises" | "splits" | "progress" | "settings"
 
 const ITEMS: { key: Screen; label: string; icon: typeof CalendarDays }[] = [
   { key: "log", label: "Log", icon: CalendarDays },
   { key: "exercises", label: "Exercises", icon: Dumbbell },
   { key: "splits", label: "Splits", icon: LayoutList },
   { key: "progress", label: "Progress", icon: TrendingUp },
+  { key: "settings", label: "Settings", icon: Settings },
 ]
 
 export function BottomNav({ active, onChange }: { active: Screen; onChange: (s: Screen) => void }) {
