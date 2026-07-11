@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { Settings } from "lucide-react"
 import { BottomNav, type Screen } from "@/components/bottom-nav"
 import { LogScreen } from "@/components/screens/log-screen"
@@ -19,6 +19,21 @@ export function AppShell() {
   const { ready, goal, appName, appIcon } = useData()
   const [screen, setScreen] = useState<Screen>(DEFAULT_SCREEN)
 
+  // Prevent browser back button from leaving the app
+  useEffect(() => {
+    // Push a state so back button doesn't exit
+    window.history.pushState(null, "", window.location.href)
+    
+    const handlePopState = (e: PopStateEvent) => {
+      e.preventDefault()
+      // Keep the user in the app by pushing state again
+      window.history.pushState(null, "", window.location.href)
+    }
+    
+    window.addEventListener("popstate", handlePopState)
+    return () => window.removeEventListener("popstate", handlePopState)
+  }, [])
+
   // Simple navigation without back button history management
   const navigate = useCallback((next: Screen) => {
     setScreen(next)
@@ -27,7 +42,7 @@ export function AppShell() {
   return (
     <ConfirmProvider>
     <div className="mx-auto flex min-h-screen max-w-md flex-col bg-background">
-      <header className="sticky top-0 z-30 border-b border-border bg-background/90 px-4 py-3 backdrop-blur-sm">
+      <header className="sticky top-0 z-30 border-b border-border bg-background px-4 py-3">
         <div className="flex items-center justify-between gap-2">
           <div className="flex min-w-0 items-center gap-2">
             <AppIcon config={appIcon} size={28} />
