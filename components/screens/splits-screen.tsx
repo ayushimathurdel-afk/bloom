@@ -280,14 +280,11 @@ function SplitEditor({
 
   return (
     <Dialog open={state.open} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent 
-        className="fixed inset-0 top-0 left-0 translate-x-0 translate-y-0 w-screen h-dvh max-w-none max-h-none flex flex-col gap-0 rounded-none border-none p-0 ring-0 bg-background"
-        showCloseButton={false}
-      >
-        <DialogHeader className="border-b border-border px-4 py-3 flex-shrink-0">
+      <DialogContent className="max-h-[88vh] max-w-md overflow-y-auto">
+        <DialogHeader>
           <DialogTitle>{state.split ? "Edit split" : "New split"}</DialogTitle>
         </DialogHeader>
-        <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
+        <div className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="split-name">Name</Label>
             <Input
@@ -435,13 +432,11 @@ function SplitEditor({
             ))}
           </div>
         </div>
-        <DialogFooter className="border-t border-border px-4 py-3 flex-shrink-0 flex gap-2">
-          <Button variant="outline" onClick={onClose} className="flex-1">
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose}>
             Cancel
           </Button>
-          <Button onClick={save} className="flex-1">
-            Save split
-          </Button>
+          <Button onClick={save}>Save split</Button>
         </DialogFooter>
       </DialogContent>
 
@@ -516,18 +511,14 @@ function ConfigureExercisesDialog({
 
   return (
     <Dialog open onOpenChange={(o) => !o && onClose()}>
-      <DialogContent 
-        className="fixed inset-0 top-0 left-0 translate-x-0 translate-y-0 w-screen h-dvh max-w-none max-h-none flex flex-col gap-0 rounded-none border-none p-0 ring-0 bg-background"
-        showCloseButton={false}
-      >
-        <DialogHeader className="border-b border-border px-4 py-3 flex-shrink-0">
+      <DialogContent className="max-h-[80vh] max-w-md overflow-y-auto">
+        <DialogHeader>
           <DialogTitle>Configure exercises for {day.name}</DialogTitle>
         </DialogHeader>
-        <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
-          <p className="text-xs text-muted-foreground">
-            Check which exercises you want to include for this day. Only checked exercises will appear when logging.
-          </p>
-          <div className="space-y-4">
+        <p className="text-xs text-muted-foreground">
+          Check which exercises you want to include for this day. Only checked exercises will appear when logging.
+        </p>
+        <div className="space-y-4">
           {Object.entries(dayExercises).map(([gid, exs]) => {
             const group = groups.find((g) => g.id === gid)
             return (
@@ -572,14 +563,12 @@ function ConfigureExercisesDialog({
             )
           })}
         </div>
-        </div>
-        <DialogFooter className="border-t border-border px-4 py-3 flex-shrink-0 flex gap-2">
-          <Button variant="outline" onClick={onClose} className="flex-1">
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose}>
             Cancel
           </Button>
           <Button
             onClick={() => onSave(Array.from(selected))}
-            className="flex-1"
           >
             Save
           </Button>

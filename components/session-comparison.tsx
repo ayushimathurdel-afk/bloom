@@ -51,10 +51,7 @@ export function SessionComparison({ open, onOpenChange, currentLog, history }: P
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent 
-        className="fixed inset-0 top-0 left-0 translate-x-0 translate-y-0 w-screen h-dvh max-w-none max-h-none flex flex-col gap-0 rounded-none border-none p-0 ring-0 bg-background"
-        showCloseButton={false}
-      >
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Session Comparison</DialogTitle>
           <DialogDescription>Compare volume and performance over time</DialogDescription>
