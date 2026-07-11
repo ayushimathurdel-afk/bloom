@@ -474,7 +474,7 @@ export function SettingsDialog({ children, open: openProp, onOpenChange }: Setti
           </div>
         </div>
 
-        <DialogFooter className="border-t border-border px-4 py-3">
+        <DialogFooter className="border-t border-border px-4 py-3 mt-6">
           <DialogClose render={<Button className="w-full gap-2">Close Settings</Button>} />
         </DialogFooter>
       </DialogContent>
