@@ -314,7 +314,6 @@ function GroupDialog({
             value={name}
             placeholder="e.g. Glutes, Back, Core"
             onChange={(e) => setName(e.target.value)}
-            autoFocus
           />
         </div>
         <DialogFooter>
@@ -400,7 +399,6 @@ function ExerciseDialog({
               value={name}
               placeholder="e.g. Hip Thrust"
               onChange={(e) => setName(e.target.value)}
-              autoFocus
             />
           </div>
           <div className="space-y-2">

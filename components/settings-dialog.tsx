@@ -198,6 +198,7 @@ export function SettingsDialog({ children, open: openProp, onOpenChange }: Setti
               onBlur={() => {
                 if (nameDraft.trim() !== appName) setAppName(nameDraft)
               }}
+              autoFocus={false}
             />
           </div>
 
