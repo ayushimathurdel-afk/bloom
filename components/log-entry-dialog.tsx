@@ -446,7 +446,10 @@ export function LogEntryDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="flex max-h-[90vh] max-w-sm flex-col gap-0 p-0">
+      <DialogContent 
+        className="fixed inset-0 top-0 left-0 translate-x-0 translate-y-0 w-screen h-dvh max-w-none max-h-none flex flex-col gap-0 rounded-none border-none p-0 ring-0 bg-background"
+        showCloseButton={false}
+      >
         <DialogHeader className="border-b border-border px-6 pb-4 pt-6">
           <DialogTitle>{entry ? "Edit exercise" : "Log exercise"}</DialogTitle>
           <DialogDescription className="sr-only">Enter sets, reps and weight.</DialogDescription>
