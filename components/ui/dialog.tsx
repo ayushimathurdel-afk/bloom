@@ -6,7 +6,6 @@ import { Dialog as DialogPrimitive } from "@base-ui/react/dialog"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { XIcon } from "lucide-react"
-import { useBackButton } from "@/hooks/use-back-button"
 
 function Dialog({
   open: openProp,
@@ -14,8 +13,7 @@ function Dialog({
   onOpenChange,
   ...props
 }: DialogPrimitive.Root.Props) {
-  // Track open state ourselves (supporting both controlled and uncontrolled
-  // usage) so the hardware back button can close any dialog.
+  // Track open state ourselves (supporting both controlled and uncontrolled usage)
   const isControlled = openProp !== undefined
   const [internalOpen, setInternalOpen] = React.useState(defaultOpen ?? false)
   const open = isControlled ? openProp : internalOpen
@@ -27,11 +25,6 @@ function Dialog({
     if (!isControlled) setInternalOpen(next)
     onOpenChange?.(next, eventDetails)
   }
-
-  useBackButton(!!open, () => {
-    if (!isControlled) setInternalOpen(false)
-    onOpenChange?.(false, undefined as never)
-  })
 
   return (
     <DialogPrimitive.Root data-slot="dialog" open={open} onOpenChange={handleOpenChange} {...props} />

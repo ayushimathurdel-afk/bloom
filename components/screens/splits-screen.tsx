@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/dialog"
 import { useData } from "@/components/data-provider"
 import { useConfirm } from "@/components/confirm-dialog"
+import { useBackButton } from "@/components/back-button-provider"
 import { deleteSplit, putSplit, uid } from "@/lib/db"
 import type { MuscleGroup, SplitDay, WorkoutSplit } from "@/lib/types"
 import { cn } from "@/lib/utils"
@@ -198,6 +199,28 @@ function SplitEditor({
   const [description, setDescription] = useState("")
   const [days, setDays] = useState<SplitDay[]>([emptyDay()])
   const [configExerciseForDay, setConfigExerciseForDay] = useState<SplitDay | null>(null)
+
+  // Register back button handler for configure dialog
+  useBackButton(
+    () => {
+      if (configExerciseForDay) {
+        setConfigExerciseForDay(null)
+        return
+      }
+    },
+    [configExerciseForDay]
+  )
+
+  // Register back button handler for split editor dialog
+  useBackButton(
+    () => {
+      if (state.open) {
+        onClose()
+        return
+      }
+    },
+    [state.open]
+  )
 
   useEffect(() => {
     if (state.open) {

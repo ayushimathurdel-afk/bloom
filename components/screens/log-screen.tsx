@@ -11,6 +11,7 @@ import { InlineFormVideo } from "@/components/inline-form-video"
 import { LogEntryDialog } from "@/components/log-entry-dialog"
 import { useData } from "@/components/data-provider"
 import { useConfirm } from "@/components/confirm-dialog"
+import { useBackButton } from "@/components/back-button-provider"
 import { deleteLog, getAllLogs, getSetting, putLog, setSetting } from "@/lib/db"
 import type { LogEntry, WeightUnit } from "@/lib/types"
 import { formatLong, toKey, todayKey } from "@/lib/date"
@@ -37,6 +38,26 @@ export function LogScreen() {
     setEditing(null)
     setDialogOpen(true)
   }, [])
+
+  // Register back button handler for video dialog
+  useBackButton(
+    useCallback(() => {
+      if (openVideoId) {
+        setOpenVideoId(null)
+        return
+      }
+    }, [openVideoId])
+  )
+
+  // Register back button handler for log entry dialog
+  useBackButton(
+    useCallback(() => {
+      if (dialogOpen) {
+        setDialogOpen(false)
+        return
+      }
+    }, [dialogOpen])
+  )
   
   useEffect(() => {
     reload()
