@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useState } from "react"
 import { Settings } from "lucide-react"
 import { BottomNav, type Screen } from "@/components/bottom-nav"
 import { LogScreen } from "@/components/screens/log-screen"
@@ -12,37 +12,42 @@ import { AppIcon } from "@/components/app-icon"
 import { Button } from "@/components/ui/button"
 import { useData } from "@/components/data-provider"
 import { ConfirmProvider } from "@/components/confirm-dialog"
+import { BackButtonProvider, useBackButton } from "@/components/back-button-provider"
 
 const DEFAULT_SCREEN: Screen = "log"
 
-export function AppShell() {
+function AppShellContent() {
   const { ready, goal, appName, appIcon } = useData()
   const [screen, setScreen] = useState<Screen>(DEFAULT_SCREEN)
   const [settingsOpen, setSettingsOpen] = useState(false)
 
-  // Prevent browser back button from leaving the app
-  useEffect(() => {
-    // Push a state so back button doesn't exit
-    window.history.pushState(null, "", window.location.href)
-    
-    const handlePopState = (e: PopStateEvent) => {
-      e.preventDefault()
-      // Keep the user in the app by pushing state again
-      window.history.pushState(null, "", window.location.href)
-    }
-    
-    window.addEventListener("popstate", handlePopState)
-    return () => window.removeEventListener("popstate", handlePopState)
-  }, [])
+  // Register back button handler for settings
+  useBackButton(
+    useCallback(() => {
+      if (settingsOpen) {
+        setSettingsOpen(false)
+        return
+      }
+    }, [settingsOpen])
+  )
 
-  // Simple navigation without back button history management
+  // Register back button handler for tab navigation
+  useBackButton(
+    useCallback(() => {
+      if (screen !== DEFAULT_SCREEN) {
+        setScreen(DEFAULT_SCREEN)
+        return
+      }
+    }, [screen])
+  )
+
+  // Simple navigation
   const navigate = useCallback((next: Screen) => {
     setScreen(next)
   }, [])
 
   return (
-    <ConfirmProvider>
-      <div className="flex h-dvh flex-col bg-background">
+    <div className="flex h-dvh flex-col bg-background">
         {/* Header Tab */}
         <header className="border-b border-border bg-background px-4 py-3">
           <div className="flex items-center justify-between gap-2">
@@ -91,6 +96,15 @@ export function AppShell() {
         {/* Settings Dialog - Fullscreen */}
         <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
       </div>
-    </ConfirmProvider>
+  )
+}
+
+export function AppShell() {
+  return (
+    <BackButtonProvider>
+      <ConfirmProvider>
+        <AppShellContent />
+      </ConfirmProvider>
+    </BackButtonProvider>
   )
 }
