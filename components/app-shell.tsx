@@ -1,10 +1,8 @@
 "use client"
 
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useState } from "react"
 import { Settings } from "lucide-react"
-import { toast } from "sonner"
 import { BottomNav, type Screen } from "@/components/bottom-nav"
-import { initBackButton, registerBackLayer, removeBackLayer } from "@/hooks/use-back-button"
 import { LogScreen } from "@/components/screens/log-screen"
 import { ExercisesScreen } from "@/components/screens/exercises-screen"
 import { SplitsScreen } from "@/components/screens/splits-screen"
@@ -20,50 +18,10 @@ const DEFAULT_SCREEN: Screen = "log"
 export function AppShell() {
   const { ready, goal, appName, appIcon } = useData()
   const [screen, setScreen] = useState<Screen>(DEFAULT_SCREEN)
-  // Id of the single back-stack layer representing "we're off the default tab".
-  const tabLayerRef = useRef<number | null>(null)
 
-  // Being on a non-default tab registers ONE back-stack layer, so the hardware
-  // back button returns to the default (Log) tab before ever leaving the app.
+  // Simple navigation without back button history management
   const navigate = useCallback((next: Screen) => {
-    if (next !== DEFAULT_SCREEN && tabLayerRef.current === null) {
-      tabLayerRef.current = registerBackLayer(() => {
-        tabLayerRef.current = null
-        setScreen(DEFAULT_SCREEN)
-      })
-    } else if (next === DEFAULT_SCREEN && tabLayerRef.current !== null) {
-      // Returned to default via the UI — drop the layer we added.
-      const id = tabLayerRef.current
-      tabLayerRef.current = null
-      removeBackLayer(id)
-    }
     setScreen(next)
-  }, [])
-
-  // Prime the hardware/browser back-button protection once on mount. A single
-  // back press navigates within the app; when nothing is left to dismiss, the
-  // first back warns and only a second back (or Home) leaves the app.
-  useEffect(() => {
-    return initBackButton(() => {
-      toast("Press back again to exit", { id: "exit-hint", duration: 1800 })
-    })
-  }, [])
-
-  // When an input/textarea is focused (e.g. the keyboard opens on mobile), scroll
-  // it into view so the user can see what they're typing.
-  useEffect(() => {
-    const onFocusIn = (e: FocusEvent) => {
-      const target = e.target as HTMLElement | null
-      if (!target) return
-      if (target.matches("input, textarea, select, [contenteditable='true']")) {
-        // Delay so the on-screen keyboard has begun resizing the viewport.
-        setTimeout(() => {
-          target.scrollIntoView({ block: "center", behavior: "smooth" })
-        }, 300)
-      }
-    }
-    window.addEventListener("focusin", onFocusIn)
-    return () => window.removeEventListener("focusin", onFocusIn)
   }, [])
 
   return (
