@@ -70,7 +70,7 @@ export function AppShell() {
         </header>
 
         {/* Content Area - grows to fill remaining space */}
-        <main className="flex-1 overflow-y-auto px-4 py-4">
+        <main className="flex-1 overflow-y-auto px-4 py-4 pb-24">
           {!ready ? (
             <div className="flex h-full items-center justify-center">
               <p className="text-sm text-muted-foreground">Loading your workouts…</p>
