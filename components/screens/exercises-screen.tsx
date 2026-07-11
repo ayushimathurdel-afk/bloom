@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/select"
 import { useData } from "@/components/data-provider"
 import { useConfirm } from "@/components/confirm-dialog"
+import { useBackButton } from "@/components/back-button-provider"
 import { VideoDialog } from "@/components/video-dialog"
 import {
   deleteExercise,
@@ -103,6 +104,37 @@ export function ExercisesScreen() {
     groupId: "",
   })
   const [videoFor, setVideoFor] = useState<Exercise | null>(null)
+
+  // Register back button handlers for dialogs
+  useBackButton(
+    () => {
+      if (videoFor) {
+        setVideoFor(null)
+        return
+      }
+    },
+    [videoFor]
+  )
+
+  useBackButton(
+    () => {
+      if (exDialog.open) {
+        setExDialog({ open: false, ex: null, groupId: "" })
+        return
+      }
+    },
+    [exDialog.open]
+  )
+
+  useBackButton(
+    () => {
+      if (groupDialog.open) {
+        setGroupDialog({ open: false, group: null })
+        return
+      }
+    },
+    [groupDialog.open]
+  )
 
   const exByGroup = useMemo(() => {
     const map: Record<string, Exercise[]> = {}
