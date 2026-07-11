@@ -45,7 +45,13 @@ function formatBytes(bytes: number) {
   return `${(mb / 1024).toFixed(2)} GB`
 }
 
-export function SettingsDialog({ children }: { children: React.ReactElement }) {
+interface SettingsDialogProps {
+  children?: React.ReactElement
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
+}
+
+export function SettingsDialog({ children, open: openProp, onOpenChange }: SettingsDialogProps) {
   const {
     goal,
     setGoal,
@@ -160,10 +166,22 @@ export function SettingsDialog({ children }: { children: React.ReactElement }) {
     reader.readAsDataURL(file)
   }
 
+  const isControlled = openProp !== undefined
+  const [internalOpen, setInternalOpen] = useState(false)
+  const open = isControlled ? openProp : internalOpen
+
+  const handleOpenChange = (next: boolean) => {
+    if (!isControlled) setInternalOpen(next)
+    onOpenChange?.(next)
+  }
+
   return (
-    <Dialog>
-      <DialogTrigger render={children} />
-      <DialogContent className="flex max-h-[90dvh] max-w-sm flex-col gap-0 p-0">
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      {children && <DialogTrigger render={children} />}
+      <DialogContent 
+        className="fixed inset-0 top-0 left-0 translate-x-0 translate-y-0 w-screen h-dvh max-w-none max-h-none flex flex-col gap-0 rounded-none border-none p-0 ring-0 bg-background"
+        showCloseButton={false}
+      >
         <DialogHeader className="border-b border-border px-4 pb-3 pt-4">
           <DialogTitle>Settings</DialogTitle>
           <DialogDescription>Your training preferences and storage.</DialogDescription>
@@ -456,9 +474,7 @@ export function SettingsDialog({ children }: { children: React.ReactElement }) {
         </div>
 
         <DialogFooter className="border-t border-border px-4 py-3">
-          <DialogClose render={<Button variant="outline" className="w-full gap-2" />}>
-            <ArrowLeft className="size-4" aria-hidden="true" /> Back to app
-          </DialogClose>
+          <DialogClose render={<Button className="w-full gap-2">Close Settings</Button>} />
         </DialogFooter>
       </DialogContent>
     </Dialog>

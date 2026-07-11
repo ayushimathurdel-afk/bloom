@@ -1,13 +1,15 @@
 "use client"
 
 import { useCallback, useEffect, useState } from "react"
+import { Settings } from "lucide-react"
 import { BottomNav, type Screen } from "@/components/bottom-nav"
 import { LogScreen } from "@/components/screens/log-screen"
 import { ExercisesScreen } from "@/components/screens/exercises-screen"
 import { SplitsScreen } from "@/components/screens/splits-screen"
 import { ProgressScreen } from "@/components/screens/progress-screen"
-import { SettingsScreen } from "@/components/screens/settings-screen"
+import { SettingsDialog } from "@/components/settings-dialog"
 import { AppIcon } from "@/components/app-icon"
+import { Button } from "@/components/ui/button"
 import { useData } from "@/components/data-provider"
 import { ConfirmProvider } from "@/components/confirm-dialog"
 
@@ -16,6 +18,7 @@ const DEFAULT_SCREEN: Screen = "log"
 export function AppShell() {
   const { ready, goal, appName, appIcon } = useData()
   const [screen, setScreen] = useState<Screen>(DEFAULT_SCREEN)
+  const [settingsOpen, setSettingsOpen] = useState(false)
 
   // Prevent browser back button from leaving the app
   useEffect(() => {
@@ -42,9 +45,20 @@ export function AppShell() {
       <div className="flex h-dvh flex-col bg-background">
         {/* Header Tab */}
         <header className="border-b border-border bg-background px-4 py-3">
-          <div className="flex items-center gap-2">
-            <AppIcon config={appIcon} size={28} />
-            <span className="truncate text-lg font-semibold tracking-tight text-primary">{appName}</span>
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex min-w-0 items-center gap-2">
+              <AppIcon config={appIcon} size={28} />
+              <span className="truncate text-lg font-semibold tracking-tight text-primary">{appName}</span>
+            </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="size-9 shrink-0 text-muted-foreground"
+              onClick={() => setSettingsOpen(true)}
+              aria-label="Settings"
+            >
+              <Settings className="size-5" />
+            </Button>
           </div>
           {goal.trim() && (
             <div className="mt-1.5">
@@ -67,13 +81,15 @@ export function AppShell() {
               {screen === "exercises" && <ExercisesScreen />}
               {screen === "splits" && <SplitsScreen />}
               {screen === "progress" && <ProgressScreen />}
-              {screen === "settings" && <SettingsScreen />}
             </>
           )}
         </main>
 
         {/* Bottom Nav Tab */}
         <BottomNav active={screen} onChange={navigate} />
+
+        {/* Settings Dialog - Fullscreen */}
+        <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
       </div>
     </ConfirmProvider>
   )
